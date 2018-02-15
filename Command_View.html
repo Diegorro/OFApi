@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Administra tus comandas</title>
+    <link href="http://ordenofacil.com/Dashboard/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="http://ordenofacil.com/Dashboard/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+   
+    <!--<link href="../vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="../vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="../vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">-->
+    <!-- Custom Theme Style -->
+    <link href="http://ordenofacil.com/Dashboard/build/css/custom.min.css" rel="stylesheet">
+</head>
+<body>
+    <ol id="messages"></ol>
+    <form action="">
+        <input id="m" autofocus/>
+        <button>send</button>
+    </form>
+
+    <script src="HTTPS://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+    <script>
+       // var chanel = '';
+        window.onload = function () {
+            var local = getCookie('ProcesLoc');           
+            localStorage.setItem("ProcesLoc", local);
+            var proceso = getCookie('Proceso');
+            localStorage.setItem('Proceso', proceso);
+
+           // chanel = local;
+        }
+        setInterval(function () {
+            // method to be executed;
+          //  location.reload();
+            //  alert('ya se ejecuto');
+            var socket = io();
+            var localProces = localStorage.getItem('ProcesLoc');
+            var proceso = localStorage.getItem('Proceso');
+            proceso = unescape(proceso);
+            console.log(proceso);
+            socket.emit('mensaje', proceso);
+
+
+            socket.on('mensaje', function (arr) {
+                var comandas = arr;
+               // alert(JSON.stringify(comandas));
+                if (comandas.length > 0)
+                {
+                    
+                    var d1 = new Date();
+                   // var fechaCompare= new Date();
+                    d1 = new Date(d1.setMinutes(d1.getMinutes() - 10));
+                   // alert(d1.getDate());
+                    var htm = '';
+                    var capa = '';
+                    div = document.getElementById("DivPath");
+                    div.innerHTML = '';
+                    capa = document.createElement("div");
+                    for(var y=0;y<comandas.length;y++)
+                    {
+                        var mesa = comandas[y].Codigosident;
+                     
+                        var d2 = new Date(comandas[y].Fecha_Creada);                       
+                        if (d1.getTime() < d2.getTime()) 
+                            htm += ' <div class="alert alert-success alert-dismissible fade in" role="alert">';
+
+                        else
+                            htm += ' <div class="alert alert-warning alert-dismissible fade in" role="alert">';
+
+                        htm += '<div class="input-group">';
+                        htm += '<span style="font-size:medium"><strong>Mesa: ' + mesa.Mesa + ' - Codigo: '+mesa.Codigo+ '   </strong>-   Pedido el: ' + d2.getDay() + '/' + d2.getMonth() + '/' + d2.getFullYear() + ' a las:<strong> ' + d2.getHours() + ':' + d2.getMinutes() + '</strong></span><br/>';
+                        htm += '<strong><span style="font-size:x-large">' + (y + 1).toString() + '.- ' + comandas[y].platillo + '</span></strong>';
+                        htm += '<div class="input-group-btn"><input id=chec' + comandas[y]._id + '  class="btn btn-primary" action="action" type="button" value="Entregado" onclick=javascript:EntregaComanda("' + comandas[y]._id + '") /><input id=Btn' + comandas[y]._id + '  class="btn btn-primary" action="action" type="button" value="Cancelado" onclick=javascript:CancelaComandas("' + comandas[y]._id + '") /><br/>';
+                        htm += '<span style="font-size:medium"> </span></div></div></div>'
+                    }
+                   
+                    capa.innerHTML = htm;
+                    div.appendChild(capa);
+                
+                }
+                else
+                    document.getElementById("DivPath").innerHTML = '<span style="font-size:x-large;font-color:blue">Aun no existen comandas levantadas</span>'
+                //$('#messages').append($('<li>').text(arr));
+            });
+        }, 10000);
+
+        var getCookie = function (name) {
+            var cookies = document.cookie.split(';');
+            for (var i = 0 ; i < cookies.length ; ++i) {
+                var pair = cookies[i].trim().split('=');
+                if (pair[0] == name)
+                    return pair[1];
+            }
+            return null;
+        };
+
+        $(function () {
+            var socket = io();
+            $('form').submit(function () {
+                socket.emit('mensaje', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+            //socket.on('mensaje', function (msg) {
+            //    $('#messages').append($('<li>').text(msg));
+            //});
+        });
+        function EntregaComanda(valuers)
+        {
+            var currentdate = new Date();
+            currentdate.getDate() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getFullYear() + " @ "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+            var dataObject = { 'status': 'Entregado', 'Fecha_Creada': currentdate };
+            var person = new Object();
+            person.status = "Entregado";
+            person.fecha_Entrega = currentdate;
+            $.ajax({
+                type: "PUT",
+                data: JSON.stringify(dataObject),
+                headers: {
+                    'Access-Control-Allow-Origin' : 'http://localhost:3000',
+                    "X-HTTP-Method-Override": "PUT" ,
+                    contentType: 'application/x-www-form-urlencoded'
+                },
+                crossDomain: true,
+                url: "http://localhost:3977/api/update-user/" + valuers,
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        }
+    </script>
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3> Administración de Comandas </h3>
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Selecciona la categoria de tus productos para que se muestren en esta pantalla</h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <p>Importante:Cada codigo debe de ser administrado por el mesero.<span class="glyphicon glyphicon-question-sign" data-toggle='tooltip' data-placement='top' title='Los Codigos solicitados, deben de ser anotados dentro de cada sticker, de la mesa correspondiente. Para que el cliente pueda interactuar con el'></span></p>
+                                
+                                    <div >
+
+
+                                        <div id="DivPath"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        
+                        <asp:Label ID="LblMensajes" runat="server" Text="" Font-Size="Medium"></asp:Label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+   
+
+    <!-- jQuery -->
+    <script src="http://ordenofacil.com/Dashboard/vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="http://ordenofacil.com/Dashboard/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="http://ordenofacil.com/Dashboard/build/js/custom.min.js"></script>
+    <script type="text/javascript">
+       
+
+
+   
+
+        $(document).on("ready", function () {
+
+
+            $('.navigate-top a').click(function () {
+                $('body,html').animate({
+                    scrollTop: 0
+                }, 800);
+                return false;
+            });
+            $(function () {
+                $("[data-toggle=\'tooltip\']").tooltip();
+            });;
+            $(function () {
+                $("[data-toggle=\'popover\']").popover();
+            });
+            $('body').on('click', function (e) {
+                //did not click a popover toggle or popover
+                if ($(e.target).data('toggle') !== 'popover'
+                    && $(e.target).parents('.popover.in').length === 0) {
+                    $('[data-toggle="popover"]').popover('hide');
+                }
+            });
+            setTimeout(function () {
+                $('.kv-webtips').removeClass('kv-animated-bell').addClass('kv-animated-bell');
+            }, 3000);
+            setTimeout(function () {
+                if ($.trim($('.adsbygoogle').html()).length < 10) {
+                    $('.adblock-msg').slideDown('slow');
+                }
+            }, 1000);
+            $('.adblock-msg .close').on('click', function (e) {
+                $('.adblock-msg').slideUp('slow');
+            });
+        });
+    </script>
+        </body>
+        </html>
