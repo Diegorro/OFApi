@@ -1,7 +1,7 @@
 'use strict'
 var mongoose = require('mongoose');
 var app=require('./app');
-var Socket=require('./socketcomanda');
+//var Socket=require('./socketcomanda');
 
 
 
@@ -14,7 +14,7 @@ mongoose.connect('mongodb://DiegoR:SALINIDAD1*@ds231568.mlab.com:31568/heroku_7x
 else
 {
     console.log('Register Bd correct');
-    app.listen(port,function(){console.log('Server is run correct port:'+port);});
+   // app.listen(port,function(){console.log('Server is run correct port:'+port);});
 }
 });
 
