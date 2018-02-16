@@ -6,7 +6,7 @@ var Socket=require('./socketcomanda');
 
 
 var port=process.env.PORT||3977;
-mongoose.connect('mongodb://localhost:27017/OrderEasyMon', (err,res) => {
+mongoose.connect('mongodb://DiegoR:SALINIDAD1*@ds231568.mlab.com:31568/heroku_7xdfk9c8', (err,res) => {
     if(err)
     {
     throw err;
