@@ -9,15 +9,9 @@ var Cookies = require( 'cookies' );
 var jwt=require('../services/jwt');
 var Codigos=require('../models/Codigo');
 var mongoose = require('mongoose');
-var appli = require('../socketcomanda');
-//var servidor = require('http').Server(app);
-//var io = require('socket.io')(servidor);
 
-function pruebillas(req, res)
-{
-    console.log(appli);
-    appli.entraaqui();
-}
+
+
 
 function getComandsCuenta(req,res){
   var parametros =req.body;
@@ -248,8 +242,7 @@ else
 module.exports = {GetComand,
        SetComandas,
     verifycode,
-        setloc,
-    pruebillas,
+        setloc,    
         EntregaCOmanda,
         MetePlatoExtra,
         getComandsCuenta,
