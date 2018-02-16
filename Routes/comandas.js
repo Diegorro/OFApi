@@ -9,7 +9,6 @@ api.get('/GetComand', ComandasControllers.GetComand);
 api.post('/SetComandas', ComandasControllers.SetComandas);
 api.get('/GetComandas', ComandasControllers.verifycode);
 api.get('/setProces', ComandasControllers.setloc);
-api.get('/aqui', ComandasControllers.pruebillas);
 api.put('/update-user/:id', md_Auth.ensureAuth, ComandasControllers.EntregaCOmanda);
 api.post('/newPlatillo',ComandasControllers.MetePlatoExtra);
 api.post('/myCount',ComandasControllers.getComandsCuenta);
