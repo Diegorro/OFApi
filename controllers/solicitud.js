@@ -14,6 +14,49 @@ var onlysix = require('../models/onlysix');
 //var app = express;
 
 
+function GetBusca(req, res) {
+    var parames = req.params;
+    var tipo = parames.typer;
+    var prefix = parames.Busqueda;
+    if (tipo == 1) {
+        //nombre lugar
+        console.log(prefix);
+
+        var getSearch = solicitudfood.find({ isActive: 1, Nombre: new RegExp(prefix, 'i') }).sort({ 'Nombre': 1 }).limit(10);
+        getSearch.populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
+            if (err)
+                res.status(500).send({ message: 'Error en Peticion de los seis' });
+    else {
+                if (Searching) {
+                    console.log(Searching);
+                    res.status(200).send({ Searching });
+                }
+    else {
+                    console.log('no hay');
+    }
+}
+});
+         
+}
+else {
+    //nombre comida
+    var myLocal = solicitudfood.find({ isActive: 1 });
+    myLocal.populate({ path: 'id_Menu', model: 'menu', match: { 'menu.Nombre': new RegExp(prefix, 'i') } }).populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
+        if (err)
+            res.status(500).send({ message: 'Error en Peticion de los seis' });
+else {
+            if (Searching) {
+                console.log(Searching);
+                res.status(200).send({ Searching });
+            }
+else {
+                console.log('no hay');
+}
+}
+});
+}
+}
+
 
 function GetInfo(req, res)
 {
@@ -101,5 +144,60 @@ function VerifyCode(req,res){
 
 
 
+function validateToken(req, res) {
+    var parames = req.params;
+    console.log(parames.Token);
+    var tok = jwt.valida(parames.Token);
+    if (tok != '') {
+        solicitudfood.findOne({ id_Hashed: tok.sub, isActive: 1, id_SQL: tok.Numericparam }, (err, LocalFound) => {
+            if (err) {
+                console.log(err);
+        res.status(500).send({ message: 'Error' + err });
+    }
+    else {
+        console.log(LocalFound);
+        if (LocalFound) {
+            res.status(200).send({ token: true })
+        }
+        else {
+            res.status(500).send(null);
+        }
+    }
+});
+}
+else {
+    res.status(500).send(null);
+}
+console.log(tok);
+}
 
-module.exports = { GetInfo,VerifyCode};
+
+function makeToken(req,res){
+    var parames = req.params;
+    console.log(parames);
+    var id=parames.hash;//.replace('_','=').replace('-','/').replace('!','+');
+    //  var nombre=parames.name;
+    var intId=Number(parames.numericSet);
+    solicitudfood.findOne({ id_Hashed: id, isActive:1, id_SQL:intId  },(err,LocalFound)=>{
+        if(err){
+        console.log(err);
+    res.status(500).send({ message: 'Error'+ err });
+}
+else {
+       console.log(LocalFound);
+if(LocalFound){
+    res.status(200).send({token:jwt.createToken(id,intId)})
+}
+else {
+    res.status(500).send(null);
+}
+}
+});
+
+}
+
+
+
+
+module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken};
+
