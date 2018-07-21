@@ -5,6 +5,7 @@ var eventorpromo = require('../models/eventorpromo');
 var paqespe = require('../models/paqespe');
 var images = require('../models/img');
 var Coders = require('../models/Codigo');
+var comensal = require('../models/comensales');
 var bcrypt = require('bcrypt-nodejs');
 var Cookies = require('cookies');
 var jwt = require('../services/jwt');
@@ -25,7 +26,7 @@ function GetBusca(req, res) {
         var getSearch = solicitudfood.find({ isActive: 1, Nombre: new RegExp(prefix, 'i') }).sort({ 'Nombre': 1 }).limit(10);
         getSearch.populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
             if (err)
-                res.status(500).send({ message: 'Error en Peticion de los seis' });
+          res.status(500).send({ message: 'Error en Peticion de los seis'+ err });
     else {
                 if (Searching) {
                     console.log(Searching);
@@ -142,7 +143,71 @@ function VerifyCode(req,res){
   }
 }
 
+function creauser(req,res)
+{
+  comensal
+  var myComensal=new comensal();
+  var params=req.params;
+   console.log(params);
+   comensal.findOne({mail:params.mail},(err,UsuarioEncontrado)=>{
+     if(!err){
+       if(!UsuarioEncontrado){
+var date=new Date();
+         var fecha=formatoDate(date);
+         
+  myComensal.mail=params.mail;
+  myComensal.passCode=params.pass;
+  myComensal.LocalContact=params.LocalContact;
+  myComensal.fechaCreate=fecha;//params.fecha;
+  myComensal.sendMail=false;
 
+
+  myComensal.save((err,Comensalguardado) =>{
+if(err)
+res.status('500').send({message:'error al guardar'+err});
+else{
+if(!Comensalguardado)
+res.status('500').send({message:'no se registro el usuario'});
+else
+{
+console.log('si guarda a segun');
+  console.log(Comensalguardado);
+   res.status('200').send({user:Comensalguardado});
+}
+}
+
+});
+}
+else {
+
+    console.log('Comensal encontrado');
+    if(UsuarioEncontrado.passCode==params.pass)
+    res.status('200').send({user:UsuarioEncontrado});
+    else {
+      res.status('200').send({user:null});
+    }
+
+}
+}
+});
+}
+
+function formatoDate(date) {
+	 var d = date,//new Date(),//date.replace("GMT+0000","").replace("GMT+0100","")),
+			 month = '' + (d.getMonth() + 1),
+			 day = '' + d.getDate(),
+			 year = d.getFullYear(),
+       hour= '' +d.getHours(),
+       minute='' +d.getMinutes();
+
+
+	 if (month.length < 2) month = '0' + month;
+	 if (day.length < 2) day = '0' + day;
+   if (hour.length < 2) hour = '0' + hour;
+   if (minute.length < 2) minute = '0' + minute;
+
+	 return [day,month,year ].join('/')+' '+hour+':'+minute;
+}
 
 function validateToken(req, res) {
     var parames = req.params;
@@ -160,13 +225,13 @@ function validateToken(req, res) {
             res.status(200).send({ token: true })
         }
         else {
-            res.status(500).send(null);
+          res.status(200).send({ token: null });;
         }
     }
 });
 }
 else {
-    res.status(500).send(null);
+    res.status(200).send({ token: null });
 }
 console.log(tok);
 }
@@ -199,5 +264,5 @@ else {
 
 
 
-module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken};
+module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser};
 
