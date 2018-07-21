@@ -9,7 +9,9 @@ api.post('/getordereasy/:typer/:Esta', SolicitudPrimera.GetInfo);
 api.post('/VerifyCode/:code/:Local', SolicitudPrimera.VerifyCode);
 api.post('/CheckOptions/:hash/:numericSet', SolicitudPrimera.makeToken);
 api.post('/searchGet/:typer/:Busqueda', SolicitudPrimera.GetBusca);
+api.post('/SearchNear/', SolicitudPrimera.getActives);
 api.post('/Vigenciacheck/:Token/', SolicitudPrimera.validateToken);
+api.post('/newValidateUser/:mail/:pass/:LocalContact', SolicitudPrimera.creauser);
 
 
 module.exports = api;
