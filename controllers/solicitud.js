@@ -59,6 +59,24 @@ else {
 }
 
 
+function getActives(req, res) {
+    solicitudfood.find({
+        isActive: 1
+    }).exec((err, Searching) => {
+            if (err)
+                res.status(500).send({ message: 'Error en Peticion de la busqueda por lat_ ' + err });
+            else {
+                if (Searching) {
+                    console.log(Searching);
+                    res.status(200).send({ Searching });
+                }
+                else {
+                    console.log('no hay');
+                }
+            }
+    });
+}
+
 function GetInfo(req, res)
 {
     var parames = req.params;
