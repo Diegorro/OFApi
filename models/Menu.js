@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var esquemaMenu = mongoose.Schema;
 var MenuSchema = esquemaMenu({
-    _id:String,
+   // _id:String,
     id_Local: Number,  // { type: schema.ObjecId, ref: 'Codigos' },
     is_Active: Number,
     date_Create: String,
