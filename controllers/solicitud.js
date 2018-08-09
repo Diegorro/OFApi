@@ -10,6 +10,8 @@ var bcrypt = require('bcrypt-nodejs');
 var Cookies = require('cookies');
 var jwt = require('../services/jwt');
 var onlysix = require('../models/onlysix');
+var Menudo = require('../models/Menu');
+var mongoose = require('mongoose');
 
 //var express = require('express')();
 //var app = express;
@@ -24,39 +26,63 @@ function GetBusca(req, res) {
         console.log(prefix);
 
         var getSearch = solicitudfood.find({ isActive: 1, Nombre: new RegExp(prefix, 'i') }).sort({ 'Nombre': 1 }).limit(10);
-        getSearch.populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
+        getSearch.populate({ path: 'id_Imgs', model: 'image' }).exec((err, buscados) => {
             if (err)
-          res.status(500).send({ message: 'Error en Peticion de los seis'+ err });
-    else {
-                if (Searching) {
-                    console.log(Searching);
-                    res.status(200).send({ Searching });
+                res.status(500).send({ message: 'Error en Peticion de los seis' + err });
+            else {
+                if (buscados) {
+                    console.log(buscados);
+                    res.status(200).send({ buscados });
                 }
-    else {
+                else {
                     console.log('no hay');
+                }
+            }
+        });
+
+    }
+    else {
+        //nombre comida
+        var myLocal = Menudo.find({ is_Active: 1, menu: { $elemMatch: { Nombre: new RegExp(prefix, 'i') } } }).exec((err, Searching) => {
+            //myLocal.populate({ path: 'id_Menu' }).populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
+            // myLocal.populate({ path: 'id_Menu', model: 'menu', $match: { 'menu.Nombre': new RegExp(prefix, 'i') } }).populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
+
+            if (err) {
+                console.log(err);
+                res.status(500).send({ message: 'Error en Peticion de los ' + err });
+            }
+            else {
+                if (Searching) {
+                    var myarreglo = new Array();
+                    Searching.forEach(function (encontrados) {
+
+                        myarreglo.push(encontrados.id_Local);
+                        //res.status(200).send({ Searching });
+                    });
+                    console.log(myarreglo[0]);
+                    var locales = solicitudfood.find({ id_SQL: { $in: myarreglo } });//, (err, buscados) => {
+                    locales.populate({ path: 'id_Imgs', model: 'image' }).exec((err, buscados) => {
+                        console.log(buscados);
+                        if (err) {
+                            console.log(err);
+                            res.status(200).send({ message: 'Error en Peticion de los ' + err });
+                        }
+                        else {
+                            if (buscados) {
+                                res.status(200).send({ buscados });
+                            }
+                        }
+                    });
+                }
+                else {
+                    res.status(200).send({});
+                    console.log('no hay');
+                }
+            }
+        });
     }
 }
-});
-         
-}
-else {
-    //nombre comida
-    var myLocal = solicitudfood.find({ isActive: 1 });
-    myLocal.populate({ path: 'id_Menu', model: 'menu', match: { 'menu.Nombre': new RegExp(prefix, 'i') } }).populate({ path: 'id_Imgs', model: 'image' }).exec((err, Searching) => {
-        if (err)
-            res.status(500).send({ message: 'Error en Peticion de los seis' });
-else {
-            if (Searching) {
-                console.log(Searching);
-                res.status(200).send({ Searching });
-            }
-else {
-                console.log('no hay');
-}
-}
-});
-}
-}
+
 
 
 function getActives(req, res) {
@@ -76,6 +102,9 @@ function getActives(req, res) {
             }
     });
 }
+
+
+
 
 function GetInfo(req, res)
 {
@@ -143,9 +172,9 @@ function VerifyCode(req,res){
   var codigo=parames.code;
   var Local=parames.Local;
   if(codigo!=''){
-      var Codigoget = Coders.findOne({ Codigo: codigo, status:'creado',Local:Local  },(err,coderFound)=>{
+       Coders.findOne({ Codigo: codigo, status:'creado',Local:Local  },(err,coderFound)=>{
           if (err)
-              res.status(500).send({ message: 'Error en Petici�n' });
+              res.status(500).send({ message: 'Error en Peticion'+ err });
           else {
               if (!coderFound){
                  // res.status(404).send({ message: 'No existen locales' });
@@ -161,6 +190,8 @@ function VerifyCode(req,res){
   }
 }
 
+
+
 function creauser(req,res)
 {
   comensal
@@ -172,7 +203,7 @@ function creauser(req,res)
        if(!UsuarioEncontrado){
 var date=new Date();
          var fecha=formatoDate(date);
-         
+
   myComensal.mail=params.mail;
   myComensal.passCode=params.pass;
   myComensal.LocalContact=params.LocalContact;
@@ -230,25 +261,29 @@ function formatoDate(date) {
 function validateToken(req, res) {
     var parames = req.params;
     console.log(parames.Token);
+
     var tok = jwt.valida(parames.Token);
     if (tok != '') {
         solicitudfood.findOne({ id_Hashed: tok.sub, isActive: 1, id_SQL: tok.Numericparam }, (err, LocalFound) => {
             if (err) {
+                  console.log('payload');
                 console.log(err);
         res.status(500).send({ message: 'Error' + err });
     }
     else {
+          console.log('payload2');
         console.log(LocalFound);
         if (LocalFound) {
             res.status(200).send({ token: true })
         }
         else {
-          res.status(200).send({ token: null });;
+            res.status(200).send({ token: null });
         }
     }
 });
 }
 else {
+  //expiro el token
     res.status(200).send({ token: null });
 }
 console.log(tok);
@@ -283,4 +318,5 @@ else {
 
 
 module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser};
+
 
