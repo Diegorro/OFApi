@@ -12,10 +12,10 @@ exports.valida = function (Token) {
     try {
         payload = jwt.decode(Token, secret);
         console.log(payload);
-        if (payload.exp <= moment.unix()) {
-            //res.status(401).send({ message: 'el token expiro' });
-            return '';
-        }
+        //  if (payload.exp <= moment.unix()) {
+        //    //res.status(401).send({ message: 'el token expiro' });
+        //    return '';
+        //}
     }
     catch (ex) {
         payload = '';
