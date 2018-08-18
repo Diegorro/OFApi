@@ -31,7 +31,7 @@ exports.createToken = function (id_hashed,intId) {
         //mai:user.email,
         //role:user.role,
         //image:user.image,
-        iat:moment().unix(),
+        //iat:moment().unix(),
         exp:moment().add(1,'days').unix(),
     }
     return jwt.encode(pailoat,secret);
