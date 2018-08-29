@@ -83,6 +83,78 @@ function GetBusca(req, res) {
     }
 }
 
+function getdashbord(req,res){
+	var parames = req.params;
+	var dato=new Date();
+	var locales=parames.Esta;
+	var hoy=formatoDate(dato).split(' ');
+	
+	var eldiadHoy=hoy[0];
+	
+	var separados=eldiadHoy.split('/');  
+	console.log(separados);
+	comanda.find({local: locales, fecha_Entrega: new RegExp(eldiadHoy, 'i')  }).sort({ 'fecha_Entrega': 1 }).exec((err, Comanda) => {
+		if(err){
+			console.log(err);
+                res.status(500).send({ message: 'Error en la pantalla de home ' + err });
+		}
+		else{
+			if(Comanda){
+				console.log(Comanda);
+				var counter=Comanda.length;
+				var platillos=new Array();;
+				for(var t=0;t<Comanda.length;t++){
+					for(var g=0; g<Comanda[t].platillos.length; g++ ){
+						var platilloCheca=Comanda[t].platillos[g].Platillo;
+						var cantidades=Comanda[t].platillos[g].Cantidad;
+						if(t==0&& g==0){
+							platillos.push({
+								Plato: platilloCheca,
+								Cantidad:cantidades,
+							})							
+							
+						}
+						else{
+							var lotienen=false;
+							var index=0;
+							var micantidad=0;
+							for(var i=0; i<platillos.length;i++){
+								console.log(platillos.length+'-'+i+'-'+platillos[i].Plato+'-'+platilloCheca)
+								if(platillos[i].Plato != undefined && lotienen==false){
+						if(platillos[i].Plato.trim() == platilloCheca.trim() ){
+							lotienen=true;
+							index=i;
+							micantidad=platillos[i].Cantidad;
+							i=platillos.length;
+						}
+								}
+						
+							}
+							if(lotienen){
+								//platillos.splice(index,1,"{Plato:"+platilloCheca+", Cantidad:"+(cantidades+micantidad)+"}")
+								platillos[index].Cantidad=cantidades+micantidad;
+								console.log(platillos[index].Cantidad);
+							}
+							else{
+								platillos.push({
+								Plato: platilloCheca,
+								Cantidad:cantidades,
+							});
+							}
+						}
+					}
+				}
+				
+				console.log(platillos);
+				
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos });
+			}
+		}
+			
+		
+	});
+	
+}
 
 
 function getActives(req, res) {
@@ -317,6 +389,6 @@ else {
 
 
 
-module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser};
+module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser, getdashbord};
 
 
