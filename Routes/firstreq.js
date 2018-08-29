@@ -12,6 +12,7 @@ api.post('/searchGet/:typer/:Busqueda', SolicitudPrimera.GetBusca);
 api.post('/SearchNear/', SolicitudPrimera.getActives);
 api.post('/Vigenciacheck/:Token/', SolicitudPrimera.validateToken);
 api.post('/newValidateUser/:mail/:pass/:LocalContact', SolicitudPrimera.creauser);
+api.post('/getdash/:typer/:Esta', SolicitudPrimera.getdashbord);
 
 
 module.exports = api;
