@@ -12,7 +12,9 @@ api.post('/searchGet/:typer/:Busqueda', SolicitudPrimera.GetBusca);
 api.post('/SearchNear/', SolicitudPrimera.getActives);
 api.post('/Vigenciacheck/:Token/', SolicitudPrimera.validateToken);
 api.post('/newValidateUser/:mail/:pass/:LocalContact', SolicitudPrimera.creauser);
+api.post('/saverComent', SolicitudPrimera.guardaComentarios);
 api.post('/getdash/:typer/:Esta', SolicitudPrimera.getdashbord);
+api.post('/rankeo', SolicitudPrimera.GuardaRank);
 
 
 module.exports = api;
