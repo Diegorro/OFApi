@@ -147,7 +147,7 @@ function GetBusca(req, res) {
 function getdashbord(req,res){
 	var parames = req.params;
 	var dato=new Date();
-	dato.setDate(dato.getDate());
+	dato.setDate(dato.getDate()-1);
 	var locales=parames.Esta;
 	var hoy=formatoDate(dato).split(' ');
 
