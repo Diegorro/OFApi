@@ -15,6 +15,7 @@ var mongoose = require('mongoose');
 var comentario = require('../models/Comentarios');
 var comanda = require('../models/comandas');
 var rank = require('../models/rank');
+var visita=require('../models/Visitas');
 
 
 //var express = require('express')();
@@ -303,29 +304,132 @@ function getdashbord(req,res){
 				}
 
 				console.log(Time_tarde_cancel);
-rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
-
-  comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((err, comentariodesc) => {
-    if(err)
-    res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, comentarios:''});
-    else
-      {
-        if(comentariodesc)
-        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, comentarios:comentariodesc});
-      }
+		rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
+			
+			if(rankeo){
+				comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
+		
+			
+			if(comentariodesc)
+			{
+			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errvisit, visitasEncontradas) => {
+				console.log(visitasEncontradas);
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:''});
+			});
+				
+			}
+			else{
+				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:''});
+			});
+			}
+			
 
 
         });
-			//	res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo});
+			}
+			else{
+					comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
+			
+			if(comentariodesc)
+        			{
+			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:''});
+			});
+				
+			}
+			else{
+				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:''});
+			});
+			}
+			
+
+
+        });
+					
+			}
+
 
       });
 			}
+			else{
+				rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
+			
+			if(rankeo){
+				comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
+		
+			
+			if(comentariodesc)
+			{
+			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:''});
+			});
+				
+			}
+			else{
+				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:''});
+			});
+			}
+			
+
+
+        });
+			}
+			else{
+					comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
+			
+			if(comentariodesc)
+        			{
+			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:''});
+			});
+				
+			}
+			else{
+				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
+				if(visitasEncontradas)
+        		res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:visitasEncontradas});
+			else
+				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:''});
+			});
+			}
+			
+
+
+        });
+					
+			}
+			});
 		}
 
 
-	});
-		}
-	});
+	}
+		});
+	}
+});
 }
 
 
@@ -364,6 +468,11 @@ function GetInfo(req, res)
               //plazas
             break;
         case ('dnE6XnhrjrU_'):
+		    var dato=new Date();
+			var Myvisit=new visita();
+			Myvisit.local=idLocal;
+			Myvisit.Fecha_Creada=formatoDate(dato);
+			Myvisit.Origen='0';
             //Establecimientos Food
             //console.log('entra');
             var myLocal = solicitudfood.findOne({ id_Hashed: idLocal, isActive:1  });
@@ -373,6 +482,8 @@ function GetInfo(req, res)
                 else {
                     if (!local){
                        // res.status(404).send({ message: 'No existen locales' });
+			     Myvisit.IsActive='0';
+					    Myvisit.save((err,VisitaGuardada) =>{});
                   var soloseis=solicitudfood.find({isActive:1}).sort({'Nombre':1}).limit(6);
                     soloseis.populate({ path: 'id_Imgs', model: 'image' }).exec((err, firtsSix) => {
                     if(err)
@@ -390,6 +501,8 @@ function GetInfo(req, res)
 
                   }
                     else {
+			    Myvisit.IsActive='1';
+					   Myvisit.save((err,VisitaGuardada) =>{});
                        // console.log(local);
                         res.status(200).send({local});
                     }
