@@ -305,11 +305,11 @@ function getdashbord(req,res){
 
 				console.log(Time_tarde_cancel);
 		rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
-			
+
 			if(rankeo){
 				comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
-		
-			
+
+
 			if(comentariodesc)
 			{
 			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errvisit, visitasEncontradas) => {
@@ -319,7 +319,7 @@ function getdashbord(req,res){
 			else
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:''});
 			});
-				
+
 			}
 			else{
 				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -329,14 +329,14 @@ function getdashbord(req,res){
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:''});
 			});
 			}
-			
+
 
 
         });
 			}
 			else{
 					comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
-			
+
 			if(comentariodesc)
         			{
 			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -345,7 +345,7 @@ function getdashbord(req,res){
 			else
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:''});
 			});
-				
+
 			}
 			else{
 				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -355,11 +355,11 @@ function getdashbord(req,res){
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:''});
 			});
 			}
-			
+
 
 
         });
-					
+
 			}
 
 
@@ -367,11 +367,11 @@ function getdashbord(req,res){
 			}
 			else{
 				rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
-			
+
 			if(rankeo){
 				comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
-		
-			
+
+
 			if(comentariodesc)
 			{
 			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -380,7 +380,7 @@ function getdashbord(req,res){
 			else
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:comentariodesc, visitasion:''});
 			});
-				
+
 			}
 			else{
 				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -390,14 +390,14 @@ function getdashbord(req,res){
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:rankeo, comentarios:'', visitasion:''});
 			});
 			}
-			
+
 
 
         });
 			}
 			else{
 					comentario.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, comentariodesc) => {
-			
+
 			if(comentariodesc)
         			{
 			visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -406,7 +406,7 @@ function getdashbord(req,res){
 			else
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:comentariodesc, visitasion:''});
 			});
-				
+
 			}
 			else{
 				visita.find({local: locales, Fecha_Creada: new RegExp(eldiadHoy, 'i')  }).sort({ 'Fecha_Creada': 1 }).exec((errComent, visitasEncontradas) => {
@@ -416,11 +416,11 @@ function getdashbord(req,res){
 				res.status(200).send({ comander:Comanda, cuantos:counter,topten:platillos,tiempos: Time_tarde_cancel, rankin:'', comentarios:'', visitasion:''});
 			});
 			}
-			
+
 
 
         });
-					
+
 			}
 			});
 		}
