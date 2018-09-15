@@ -681,4 +681,4 @@ else {
 
 
 
-module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser, getdashbord,GuardaRank,guardaComentarios};
+module.exports = { GetInfo, VerifyCode, makeToken, GetBusca, validateToken,getActives,creauser};//, getdashbord,GuardaRank,guardaComentarios};
