@@ -471,11 +471,11 @@ function GetInfo(req, res)
         case ('dnE6XnhrjrU_'):
             //Establecimientos Food
             //console.log('entra');
-        //    var dato=new Date();
-    //var Myvisit=new visita();
-    //Myvisit.local=idLocal;
-    //Myvisit.Fecha_Creada=formatoDate(dato);
-    //Myvisit.Origen='0';
+            var dato=new Date();
+    var Myvisit=new visita();
+    Myvisit.local=idLocal;
+    Myvisit.Fecha_Creada=formatoDate(dato);
+    Myvisit.Origen='0';
 
 
             var myLocal = solicitudfood.findOne({ id_Hashed: idLocal, isActive:1  });
@@ -485,8 +485,8 @@ function GetInfo(req, res)
                 else {
                     if (!local){
                        // res.status(404).send({ message: 'No existen locales' });
-                     //  Myvisit.IsActive='0';
-          //Myvisit.save((err,VisitaGuardada) =>{});
+                       Myvisit.IsActive='0';
+          Myvisit.save((err,VisitaGuardada) =>{});
                   var soloseis=solicitudfood.find({isActive:1}).sort({'Nombre':1}).limit(6);
                     soloseis.populate({ path: 'id_Imgs', model: 'image' }).exec((err, firtsSix) => {
                     if(err)
@@ -505,9 +505,9 @@ function GetInfo(req, res)
                   }
                     else {
                        // console.log(local);
-                   //    Myvisit.IsActive='1';
-            //Myvisit.save((err,VisitaGuardada) =>{
-            //});
+                       Myvisit.IsActive='1';
+            Myvisit.save((err,VisitaGuardada) =>{
+            });
                         res.status(200).send({local});
                     }
                 }
