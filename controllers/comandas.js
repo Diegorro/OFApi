@@ -15,7 +15,7 @@ var mongoose = require('mongoose');
 
 function getComandsCuenta(req,res){
   var parametros =req.body;
-  console.log(parametros);
+  //console.log(parametros);
   if(parametros.codigo=='0'){
 
     var dateObj = new Date();
@@ -33,7 +33,7 @@ function getComandsCuenta(req,res){
     if (minute.length < 2) minute = '0' + minute;
 
     var newdate= [day,month,year ].join('/');
-console.log(newdate);
+//console.log(newdate);
     //var este='26/01/2018';//new Date('2018','01','25');
   comanda.find({$or:[{local: parametros.Local, Estatus:4,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }},{local: parametros.Local, Estatus:7,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }}]}, function(err, Comanda) {
       if (err) throw err;
@@ -46,7 +46,7 @@ else {
   comanda.find({$or:[{local: parametros.Local, Estatus:4,codigoStr:parametros.codigo},{local: parametros.Local, Estatus:7,codigoStr:parametros.codigo}]}, function(err, Comanda) {
       if (err) throw err;
     else{
-      console.log(Comanda);
+      //console.log(Comanda);
       res.status('200').send({comanda:Comanda});
     }
   });
@@ -56,7 +56,7 @@ else {
 function MetePlatoExtra(req,res){
   //var Comandas=new comanda();
   var parametros=req.body;
-  console.log(parametros);
+ // console.log(parametros);
   //var objectId = new mongoose.ObjectID;
   comanda.findByIdAndUpdate(parametros.id,
   // {_id: },
@@ -73,7 +73,7 @@ function MetePlatoExtra(req,res){
 
 function payComand(req, res){
   var parametros=req.body;
-  console.log(parametros);
+  //console.log(parametros);
   comanda.findByIdAndUpdate(parametros.id,{Estatus:7},(err, Comand)=>{
     if(err)
     res.status(500).send({message:'error al actualizar la comanda'});
@@ -122,6 +122,23 @@ function SetComandas(req,res)
     Comandas.fecha_Entrega=params.fecha_Entrega;
     Comandas.Estatus=params.Estatus;
 
+  var newdate=Comandas.Fecha_Creada.split(' ');
+
+  comanda.find({codigoStr:Comandas.codigoStr,Fecha_Creada: { $regex: '.*' + newdate[0] + '.*' }}, function(err, Comandexistente) {
+  console.log(Comandexistente);
+    if(Comandexistente!=''){
+console.log( params.platillos[0].fechaCreado);
+for(var e=0;e<params.platillos.length;e++){
+      comanda.findByIdAndUpdate(Comandexistente[0].id,
+       { $push : { platillos: {id:new mongoose.Types.ObjectId(),isCode: true, fechaCreado: params.platillos[e].fechaCreado,Platillo:params.platillos[e].Platillo,Mesa:params.platillos[e].Mesa,Estatus:params.platillos[e].Estatus,Cantidad:params.platillos[e].Cantidad, precio:params.platillos[e].precio}}},
+        (err,PlatoGuarda)=>{
+               //res.status('200').send({Comandas:PlatoGuarda});
+        });
+      }
+    }
+    else {
+
+  
     Comandas.save((err,ComandaGuardada) =>{
 if(err)
   res.status('500').send({message:'error al guardar'+err});
@@ -137,7 +154,8 @@ else
 }
 
 });
-
+}
+});
 }
 
 //busca comanda
@@ -167,7 +185,7 @@ function setloc(req, res)
             var categorias='';
 
             var onlyMenu=MenuCom.menu;
-            console.log(onlyMenu);
+           // console.log(onlyMenu);
             if(onlyMenu!=null)
             {
                 for(var i=0; i<onlyMenu.length;i++)
@@ -178,7 +196,7 @@ function setloc(req, res)
             }
 
             bcrypt.hash(MenuCom.id_Local,null,null,function(err,hash){
-                console.log(hash);
+             //   console.log(hash);
                 locProces=hash;
 
 
@@ -205,7 +223,7 @@ function GetComand(req, res)
         //  res.status('200').sendFile(__dirname+'/Command_View.html');
         if(loc!=null)
         {
-            console.log(loc);
+          //  console.log(loc);
             //idlocal=loc.idLocal;
             res.status('200').send({locer:loc});
         }
