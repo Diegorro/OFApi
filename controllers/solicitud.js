@@ -20,15 +20,18 @@ var visita=require('../models/Visitas');
 //var express = require('express')();
 //var app = express;
 
-
+function cambiaTipo(fechaResolve) {
+    var fecha = fechaResolve.replace('|', '/').replace('|', '/').replace('-', ':').replace('_', ' ')
+    return fecha;
+}
 function guardaComentarios(req,res)
 {
     var parametros =req.body;
     console.log(parametros);
     var myComent=new comentario();
 
-  var date=new Date();
-           var fecha=formatoDate(date);
+    //var date=new Date();
+  var fecha = cambiaTipo(parametros.fec);//formatoDate(date);
 
     myComent.mail=parametros.mail;
     myComent.Nombre=parametros.Name;
@@ -52,8 +55,7 @@ function GuardaRank(req, res){
   var parames =req.body// req.params; esta es por get
   console.log(parames);
 var myrank=new rank();
-var date=new Date();
-        var fecha=formatoDate(date);
+ var fecha=cambiaTipo(parames.fecha);//formatoDate(date);
 
  myrank.Idusuario=parames.usuario;
  myrank.Calificacion=parames.calif;
@@ -151,9 +153,9 @@ function getdashbord(req,res){
 	var dato=new Date();
 	dato.setDate(dato.getDate()-1);
 	var locales=parames.Esta;
-	var hoy=formatoDate(dato).split(' ');
+	var hoy = cambiaTipo(parames.Time);//formatoDate(dato).split(' ');
 
-	var eldiadHoy=hoy[0];
+	var eldiadHoy=hoy;
 	var horasLocal=0;
 	var separados=eldiadHoy.split('/');
 
@@ -163,7 +165,13 @@ function getdashbord(req,res){
 		var mihorarioSplit=horasLocal.split('-');
 		var horafin=mihorarioSplit[1].split(':');
 		var horaIni=mihorarioSplit[0].split(':');
-		var tiempoAbierto=(parseInt(horafin[0])-parseInt(horaIni[0]))/8;
+		  var tiempoAbierto = 0;
+             if (parseInt(horafin[0]) < parseInt(horaIni[0])) {
+                 tiempoAbierto = ((24 - parseInt(horaIni[0])) + parseInt(horafin[0])) / 8;
+
+             }
+             else
+ 		 tiempoAbierto=(parseInt(horafin[0])-parseInt(horaIni[0]))/8;
 
 	comanda.find({local: locales, fecha_Entrega: new RegExp(eldiadHoy, 'i')  }).sort({ 'fecha_Entrega': 1 }).exec((err, Comanda) => {
 
@@ -205,7 +213,7 @@ function getdashbord(req,res){
 
 					var hours = Math.floor(horasMin / 60);
 					var minutes = horasMin % 60;
-					console.log(HORAVa[0]+"___"+hours+":"+minutes);
+					//console.log(HORAVa[0]+"___"+hours+":"+minutes);
 					if(minutes.toString().length==1){
 						if(horasMin>60)
 						minutes="0"+minutes;
@@ -285,7 +293,7 @@ function getdashbord(req,res){
 							var index=0;
 							var micantidad=0;
 							for(var i=0; i<platillos.length;i++){
-								console.log(platillos.length+'-'+i+'-'+platillos[i].name+'-'+platilloCheca)
+								//console.log(platillos.length+'-'+i+'-'+platillos[i].name+'-'+platilloCheca)
 								if(platillos[i].name != undefined && lotienen==false){
 						if(platillos[i].name.trim() == platilloCheca.trim() ){
 							lotienen=true;
@@ -299,7 +307,7 @@ function getdashbord(req,res){
 							if(lotienen){
 								//platillos.splice(index,1,"{Plato:"+platilloCheca+", Cantidad:"+(cantidades+micantidad)+"}")
 								platillos[index].value=cantidades+micantidad;
-								console.log(platillos[index].value);
+								//console.log(platillos[index].value);
 							}
 							else{
 								platillos.push({
@@ -324,7 +332,7 @@ function getdashbord(req,res){
 					}
 				}
 
-				console.log(Time_tarde_cancel);
+				//console.log(Time_tarde_cancel);
 		rank.find({Local:locales,fecha: new RegExp(eldiadHoy, 'i') }).exec((err, rankeo) => {
 
 			if(rankeo){
@@ -493,10 +501,10 @@ function GetInfo(req, res)
         case ('dnE6XnhrjrU_'):
             //Establecimientos Food
             //console.log('entra');
-            var dato=new Date();
+              var dato = cambiaTipo(parames.Time);
     var Myvisit=new visita();
     Myvisit.local=idLocal;
-    Myvisit.Fecha_Creada=formatoDate(dato);
+     Myvisit.Fecha_Creada=dato;//formatoDate(dato);
     Myvisit.Origen='0';
 
 
