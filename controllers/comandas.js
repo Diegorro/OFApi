@@ -93,7 +93,7 @@ function GetComandByCode(req,res){
     console.log('x aca');
   console.log(codigo+'---'+Local);
   if(codigo!=''){
-      var Codigoget = comanda.findOne({ codigoStr: codigo,local:Local  },(err,ComandFounder)=>{
+      var Codigoget = comanda.findOne({ codigoStr:  codigo.toLowerCase(),local:Local  },(err,ComandFounder)=>{
           if (err)
               res.status(500).send({ message: 'Error en Peticion' });
           else {
