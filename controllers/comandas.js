@@ -11,7 +11,10 @@ var Codigos=require('../models/Codigo');
 var mongoose = require('mongoose');
 
 
-
+function cambiaTipo(fechaResolve) {
+    var fecha = fechaResolve.replace('|', '/').replace('|', '/').replace('-', ':').replace('_', ' ')
+    return fecha;
+}
 
 function getComandsCuenta(req,res){
   var parametros =req.body;
@@ -32,7 +35,7 @@ function getComandsCuenta(req,res){
     if (hour.length < 2) hour = '0' + hour;
     if (minute.length < 2) minute = '0' + minute;
 
-    var newdate= [day,month,year ].join('/');
+    var newdate= parametros.timer; //[day,month,year ].join('/');
 //console.log(newdate);
     //var este='26/01/2018';//new Date('2018','01','25');
   comanda.find({$or:[{local: parametros.Local, Estatus:4,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }},{local: parametros.Local, Estatus:7,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }}]}, function(err, Comanda) {
