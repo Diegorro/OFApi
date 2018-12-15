@@ -35,21 +35,21 @@ function getComandsCuenta(req,res){
     if (hour.length < 2) hour = '0' + hour;
     if (minute.length < 2) minute = '0' + minute;
 
-    var newdate= parametros.timer; //[day,month,year ].join('/');
-//console.log(newdate);
+    var newdate= cambiaTipo(parametros.timer).split(' '); //[day,month,year ].join('/');
+console.log(newdate[0] +' is may time');
     //var este='26/01/2018';//new Date('2018','01','25');
-  comanda.find({$or:[{local: parametros.Local, Estatus:4,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }},{local: parametros.Local, Estatus:7,fecha_Entrega:{ $regex: '.*' + newdate + '.*' }}]}, function(err, Comanda) {
+  comanda.find({$or:[{local: parametros.Local, Estatus:4,fecha_Entrega:{ $regex: '.*' + newdate[0]  + '.*' }},{local: parametros.Local, Estatus:7,fecha_Entrega:{ $regex: '.*' + newdate[0]  + '.*' }}]}, function(err, Comanda) {
       if (err) throw err;
     else
       res.status('200').send({comanda:Comanda});
-  });
+  }).sort({ 'fecha_Entrega': -1 }).limit(50);
 }
 else {
 
   comanda.find({$or:[{local: parametros.Local, Estatus:4,codigoStr:parametros.codigo},{local: parametros.Local, Estatus:7,codigoStr:parametros.codigo}]}, function(err, Comanda) {
       if (err) throw err;
     else{
-      //console.log(Comanda);
+    //  console.log(Comanda);
       res.status('200').send({comanda:Comanda});
     }
   });
